@@ -1,12 +1,10 @@
 const puppeteer = require("puppeteer");
 
-const TEST = true;
+const TEST = false;
 
-const url = "https://www.nike.com/es/launch/t/womens-dunk-high-varsity-purple";
+const url = "https://www.nike.com/es/launch/t/air-jordan-1-j-balvin";
 const size = 11;
 
-const mail = 'Coconaut7@gmail.com';
-const pass = 'z9wkqVC0hAOfaGw1wpBNfUFPrHoaOq';
 const cvc = "555";
 
 (async () => {
@@ -17,20 +15,38 @@ const cvc = "555";
     });
     const page = await browser.newPage();
     await page.goto(url + "?size=" + size);
-    
-    await page.waitFor(1000);
+    /*
+    await page.waitForSelector("button[data-qa='feed-buy-cta']");
     await page.click("button[data-qa='feed-buy-cta']");
-    await page.waitFor(500);
+    await page.waitForSelector("[name='emailAddress']");
     await page.type("[name='emailAddress']", mail);
     await page.type("[name='password']", pass);
-    await page.waitFor(2000);
+    await page.waitForSelector("input[type=button]");
     await page.click("input[type=button]");
+*/
 
-    await page.waitFor(1000);
+    let date = new Date();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    while(!(hours == 9 && minutes == 0)) {
+        date = new Date();
+        hours = date.getHours();
+        minutes = date.getMinutes();
+    }
 
+    await page.evaluate(() => {
+        location.reload(true)
+    });
+
+    await page.waitForSelector("button[data-qa='feed-buy-cta']");
     await page.click("button[data-qa='feed-buy-cta']");
-    await page.waitFor(1000);
-    await page.type("[id='cvNumber']", cvc);
+    await page.waitForSelector("input[id='cvNumber']", {visible: true});
+    await page.type("input[id='cvNumber']", cvc);
     await page.click("button[data-qa='save-button']");
-    if(!test)await page.click("button[data-qa='save-button']");    
+    if(!TEST){
+        const xp = "//button[contains(., 'Enviar pedido')]";
+        await page.waitForXPath(xp);
+        const [button] = await page.$x(xp);
+        await button.click();
+    }
 })();
