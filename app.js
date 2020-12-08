@@ -1,7 +1,5 @@
 const puppeteer = require("puppeteer");
 
-const TEST = false;
-
 const url = "https://www.nike.com/es/launch/t/air-jordan-1-j-balvin";
 const size = 11;
 
@@ -43,10 +41,9 @@ const cvc = "555";
     await page.waitForSelector("input[id='cvNumber']", {visible: true});
     await page.type("input[id='cvNumber']", cvc);
     await page.click("button[data-qa='save-button']");
-    if(!TEST){
-        const xp = "//button[contains(., 'Enviar pedido')]";
-        await page.waitForXPath(xp);
-        const [button] = await page.$x(xp);
-        await button.click();
-    }
+
+    const xp = "//button[contains(., 'Enviar pedido')]";
+    await page.waitForXPath(xp);
+    const [button] = await page.$x(xp);
+    await button.click();
 })();
