@@ -1,7 +1,6 @@
 const puppeteer = require("puppeteer");
 
-const url = "https://www.nike.com/es/launch/t/air-jordan-1-j-balvin";
-const size = 11;
+const url = "https://www.nike.com/es/launch/";
 
 const cvc = "555";
 
@@ -12,16 +11,7 @@ const cvc = "555";
         args: [`--window-size=1500,1000`] // new option
     });
     const page = await browser.newPage();
-    await page.goto(url + "?size=" + size);
-    /*
-    await page.waitForSelector("button[data-qa='feed-buy-cta']");
-    await page.click("button[data-qa='feed-buy-cta']");
-    await page.waitForSelector("[name='emailAddress']");
-    await page.type("[name='emailAddress']", mail);
-    await page.type("[name='password']", pass);
-    await page.waitForSelector("input[type=button]");
-    await page.click("input[type=button]");
-*/
+    await page.goto(url);
 
     let date = new Date();
     let hours = date.getHours();
@@ -33,7 +23,7 @@ const cvc = "555";
     }
 
     await page.evaluate(() => {
-        location.reload(true)
+        location.reload(true);
     });
 
     await page.waitForSelector("button[data-qa='feed-buy-cta']");
